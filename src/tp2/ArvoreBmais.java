@@ -67,7 +67,7 @@ public class ArvoreBmais {
         for (int i = 0; i < folha.chaves.size(); i++) {
             if (folha.chaves.get(i) == id) {
                 folha.offsets.set(i, offset);
-                salvar();
+                //salvar();
                 return;
             }
         }
@@ -84,7 +84,7 @@ public class ArvoreBmais {
         if (folha.chaves.size() >= ordem) {
             dividirFolha(folha);
         }
-        salvar();
+        //salvar();
     }
 
     // metodo para dividir as folha
@@ -228,4 +228,5 @@ public class ArvoreBmais {
             dividirFolha(folha);
         }
     }
+    
 }

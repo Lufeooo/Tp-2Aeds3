@@ -40,6 +40,7 @@ public static void csv(String steamcsv, Arquivo arquivo, ArvoreBmais arvore) thr
             arvore.inserir(jogo.getId(), offset);
         }
         ler.close();
+        arvore.salvar();
     }
 
 }

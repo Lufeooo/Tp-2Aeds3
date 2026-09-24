@@ -115,112 +115,107 @@ public class Main {
                     // pegar o offset e retornar para salvar na arvore
                     long offset = arquivo.create(novoJogo);
                     arvore.inserir(novoJogo.getId(), offset);
+                    arvore.salvar();
 
                     System.out.println("Jogo criado com sucesso");
                     System.out.println("ID gerado: " + novoJogo.getId());
 
                     break;
 
-                case 3:
+                    case 3:
                     System.out.print("Digite o ID do jogo: ");
                     int id = scanf.nextInt();
 
-                    // procura o jogo
+                    // procura o jogo na árvore
                     long offsetBusca = arvore.buscar(id);
 
-                    // se o jogo acho entra pra mostrar as informçoes
                     if (offsetBusca != -1) {
-                        Jogo jogo = arquivo.LerArvore(offsetBusca); // vai na posiçao direto O(1)
-                        System.out.println("ID: " + jogo.getId());
-                        System.out.println("Nome: " + jogo.getNome());
-                        System.out.println("Donos: " + jogo.getDonos());
-                        String dataFormatada = new java.text.SimpleDateFormat("dd/MM/yyyy")
-                                .format(new java.util.Date(jogo.getDataLancamento()));
-                        System.out.println("Data: " + dataFormatada);
-                        System.out.println("Preço: $" + jogo.getPreco());
-                        System.out.println("Gênero: " + jogo.getGenero());
+                        Jogo jogo = arquivo.LerArvore(offsetBusca); 
+                        
+                        // Verificar se o jogo retornado não esta deletado lapide 1
+                        if (jogo != null) {
+                            System.out.println("ID: " + jogo.getId());
+                            System.out.println("Nome: " + jogo.getNome());
+                            System.out.println("Donos: " + jogo.getDonos());
+                            String dataFormatada = new java.text.SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date(jogo.getDataLancamento()));
+                            System.out.println("Data: " + dataFormatada);
+                            System.out.println("Preço: $" + jogo.getPreco());
+                            System.out.println("Gênero: " + jogo.getGenero());
+                        } else {
+                            // Se a arvore tem o offset mas o LerArvore retornou null
+                            System.out.println("Este jogo foi deletado.");
+                        }
 
                     } else {
-
-                        System.out.println("Jogo nao encontrado");
+                        System.out.println("Jogo nao encontrado.");
                     }
-
                     break;
 
                 case 4:
-                    // Pedir o ID do jogo que será atualizado
-                    System.out.print("Digite o ID do jogo: ");
+                    System.out.print("Digite o ID do jogo para atualizar: ");
                     int idUpdate = scanf.nextInt();
 
-                    // procurar o jogo
-                    Jogo jogoUpdate = arquivo.read(idUpdate);
+                    // Busca a posição instantaneamente na Árvore
+                    long offsetAtual = arvore.buscar(idUpdate);
 
-                    // verificar se existe
-                    if (jogoUpdate == null) {
+                    if (offsetAtual == -1) {
                         System.out.println("Jogo nao encontrado.");
                         break;
                     }
 
-                    // limpar o enter
-                    scanf.nextLine();
+                    // Lê o jogo diretamente usando o offset
+                    Jogo jogoUpdate = arquivo.LerArvore(offsetAtual);
+                    scanf.nextLine(); // Limpa o buffer
 
-                    // nome atual
                     System.out.println("Nome atual: " + jogoUpdate.getNome());
-
-                    // Pedir novo nome
                     System.out.print("Digite o novo nome: ");
                     String novoNome = scanf.nextLine();
 
-                    // Pedir nova quantidade de donos
                     System.out.println("Donos atuais: " + jogoUpdate.getDonos());
-                    System.out.print("Digite os novos donos: ");
+                    System.out.print("Digite os novos donos (xxxxx-xxxxx): ");
                     String novosDonos = scanf.nextLine();
 
-                    // Pedir nova data
                     String dataForm = new java.text.SimpleDateFormat("dd/MM/yyyy")
                             .format(new java.util.Date(jogoUpdate.getDataLancamento()));
                     System.out.println("Data atual: " + dataForm);
                     System.out.print("Digite a nova data (yyyy-MM-dd): ");
                     String novaData = scanf.nextLine();
 
-                    // Converter a nova data
-                    long novaDataLancamento;
-
+                    long novaDataLancamento = jogoUpdate.getDataLancamento();
                     try {
-                        novaDataLancamento = new java.text.SimpleDateFormat("yyyy-MM-dd")
-                                .parse(novaData)
-                                .getTime();
+                        novaDataLancamento = new java.text.SimpleDateFormat("yyyy-MM-dd").parse(novaData).getTime();
                     } catch (Exception e) {
-                        System.out.println("Data inválida.");
-                        break;
+                        System.out.println("Data inválida. Mantendo a antiga.");
                     }
 
-                    // Pedir novo preço
                     System.out.println("Preço atual: " + jogoUpdate.getPreco());
                     System.out.print("Digite o novo preço: ");
-                    float novoPreco = scanf.nextFloat();
+                    String precoStr = scanf.nextLine().replace(",", ".");
+                    float novoPreco = precoStr.isEmpty() ? jogoUpdate.getPreco() : Float.parseFloat(precoStr);
 
-                    // Limpar o ENTER
-                    scanf.nextLine();
-
-                    // Pedir novo gênero
                     System.out.println("Gênero atual: " + jogoUpdate.getGenero());
                     System.out.print("Digite o novo gênero: ");
                     String novoGenero = scanf.nextLine();
 
-                    // colocando os dados certo no objeto
+                    // Aplica as mudanças no objeto
                     jogoUpdate.setNome(novoNome);
                     jogoUpdate.setDonos(novosDonos);
                     jogoUpdate.setDataLancamento(novaDataLancamento);
                     jogoUpdate.setPreco(novoPreco);
                     jogoUpdate.setGenero(novoGenero);
 
-                    // chamar o atualizar
-                    boolean atualizou = arquivo.update(jogoUpdate);
-                    if (atualizou) {
-                        System.out.println("Deu certo");
+                    // Chama a atualização direta pelo offset
+                    long novoOffset = arquivo.updateByOffset(offsetAtual, jogoUpdate);
+
+                    if (novoOffset != -1) {
+                        // Se o registro aumentou e foi movido para o fim do arquivo, a árvore tem de ser atualizada com o novo offset
+                        if (novoOffset != offsetAtual) {
+                            arvore.inserir(idUpdate, novoOffset); 
+                            arvore.salvar();
+                        }
+                        System.out.println("Jogo atualizado com sucesso!");
                     } else {
-                        System.out.println("Erro");
+                        System.out.println("Erro ao atualizar o jogo.");
                     }
                     break;
 

@@ -605,4 +605,36 @@ public void fechar() throws IOException {
             arquivo.close();
         }
     }
+    // metodo para atualizar na arvore b+
+    public long updateByOffset(long offset, Jogo novoJogo) throws IOException {
+        if (offset < 4 || offset >= arquivo.length()) return -1;
+
+        arquivo.seek(offset);
+        byte lapide = arquivo.readByte();
+        int tamanhoAntigo = arquivo.readInt();
+
+        if (lapide == 1) return -1; // registro ja estava deletado
+
+        byte[] vetorNovo = novoJogo.byteparaArray();
+
+        // Se o novo registro couber no espaço antigo subscreve no mesmo lugar
+        if (vetorNovo.length <= tamanhoAntigo) {
+            arquivo.seek(offset + 5); // pula o byte da lapide e o int do tamanho
+            arquivo.write(vetorNovo);
+            return offset; // o offset continua o mesmo
+        } else {
+            // Se for maior marca o antigo como lápide 
+            arquivo.seek(offset);
+            arquivo.writeByte(1);
+
+            // e grava o novo no final do arquivo
+            long novoOffset = arquivo.length();
+            arquivo.seek(novoOffset);
+            arquivo.writeByte(0);
+            arquivo.writeInt(vetorNovo.length);
+            arquivo.write(vetorNovo);
+            
+            return novoOffset; // Retorna a nova posição para a arvore B+ ser atualizada
+        }
+    }
 }
