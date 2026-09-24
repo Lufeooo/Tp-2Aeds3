@@ -1,4 +1,4 @@
-package tp1;
+package tp2;
 
 public class Registro {
     private int id;
