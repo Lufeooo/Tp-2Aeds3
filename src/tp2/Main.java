@@ -28,6 +28,7 @@ public class Main {
             System.out.println("4 - Atualizar jogo");
             System.out.println("5 - Deletar jogo");
             System.out.println("6 - Ordenar arquivo");
+            System.out.println("7 - Busca Combinada");
             System.out.println("0 - Sair");
             System.out.print("Escolha uma opção: ");
 
@@ -261,6 +262,54 @@ public class Main {
 
                     System.out.println("Ordenado");
 
+                    break;
+                    case 7:
+                    System.out.println("Busca Combinada Genero e Nome ");
+                    
+                    System.out.print("Digite um gênero Ex: Action, Indie: ");
+                    scanf.nextLine(); 
+                    String buscaGenero = scanf.nextLine();
+                    
+                    System.out.print("Digite uma palavra do nome do jogo Ex: War, Simulator ");
+                    String buscaNome = scanf.nextLine();
+
+                    // Busca as listas de IDs nas duas estruturas
+                    java.util.ArrayList<Integer> idsGenero = listaGeneros.buscar(buscaGenero);
+                    java.util.ArrayList<Integer> idsNome = listaNomes.buscar(buscaNome);
+
+                    if (idsGenero.isEmpty()) {
+                        System.out.println("Nenhum jogo encontrado para o genero: " + buscaGenero);
+                        break;
+                    }
+                    if (idsNome.isEmpty()) {
+                        System.out.println("Nenhum jogo encontrado contendo a palavra: " + buscaNome);
+                        break;
+                    }
+
+                    // Fazer a interseção (pegar apenas os IDs que estão nas DUAS listas)
+                    java.util.ArrayList<Integer> idsEncontrados = new java.util.ArrayList<>();
+                    for (int idGenero : idsGenero) {
+                        if (idsNome.contains(idGenero)) {
+                            idsEncontrados.add(idGenero);
+                        }
+                    }
+
+                    // Mostrar os resultados
+                    if (idsEncontrados.isEmpty()) {
+                        System.out.println("Nenhum jogo atende aos dois criterios ao mesmo tempo.");
+                    } else {
+                        System.out.println("\nJogos encontrados (" + idsEncontrados.size() + "):");
+                        for (int idEncontrado : idsEncontrados) {
+                            // Busca instantânea na árvore para pegar os dados e imprimir
+                            long offsetJogo = arvore.buscar(idEncontrado);
+                            if (offsetJogo != -1) {
+                                Jogo jogoEncontrado = arquivo.LerArvore(offsetJogo);
+                                if (jogoEncontrado != null) {
+                                    System.out.println("ID: " + jogoEncontrado.getId() + " | Nome: " + jogoEncontrado.getNome() + " | Gênero: " + jogoEncontrado.getGenero());
+                                }
+                            }
+                        }
+                    }
                     break;
 
                 case 0:
