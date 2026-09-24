@@ -12,6 +12,9 @@ public class Main {
         Arquivo arquivo = new Arquivo("jogos.db");
         // iniciar a arvore b+ agora
         ArvoreBmais arvore = new ArvoreBmais("indiceArvore", 8);
+        // iniciar as listas
+        ListaInvertida listaNomes = new ListaInvertida("listaNomes.db");
+        ListaInvertida listaGeneros = new ListaInvertida("listaGeneros.db");
 
         // Opção escolhida pelo usuário
         int opcao = -1;
@@ -58,8 +61,8 @@ public class Main {
                     if (caminhoCorreto == null) {
                         System.out.println("Erro: csv nao encontrado");
                     } else {
-                        // Roda a carga com a arvore
-                        Carga.csv(caminhoCorreto, arquivo, arvore);
+                        // Roda a carga com a arvore e a lista
+                        Carga.csv(caminhoCorreto, arquivo, arvore, listaNomes, listaGeneros);
                         System.out.println("Carga finalizada!");
                     }
                     break;

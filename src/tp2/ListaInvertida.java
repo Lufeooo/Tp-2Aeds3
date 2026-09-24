@@ -22,7 +22,7 @@ public class ListaInvertida {
             dicionario.put(termo, new ArrayList<>());
         }
         // adicionar o id na lista se o termo ja existe
-        if(dicionario.get(termo).contains(id)){
+        if(!dicionario.get(termo).contains(id)){
             dicionario.get(termo).add(id);
         }
     
