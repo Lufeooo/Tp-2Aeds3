@@ -1,7 +1,7 @@
 ## Descrição do Projeto
-Este projeto implementa um sistema de gerenciamento de banco de dados baseado em arquivos binários (`jogos.db`). Ele permite a realização de operações CRUD (Create, Read, Update, Delete), Ordenação Externa (Intercalação Balanceada) para limpeza de registros excluídos, e agora conta com indexação avançada. 
+Este projeto implementa um sistema de gerenciamento de banco de dados baseado em arquivos binários (`jogos.db`). Ele permite a realização de operações CRUD (Create, Read, Update, Delete), Ordenação Externa (Intercalação Balanceada) para limpeza de registros excluídos, e agora com com indexação avançada. 
 
-Para tornar as operações instantâneas (O(1)), o sistema utiliza uma **Árvore B+** como índice primário (buscando direto pelo offset). Além disso, foram implementadas **Listas Invertidas** para permitir buscas combinadas rápidas baseadas no nome e no gênero do jogo. A base de dados utilizada contém informações sobre jogos da plataforma Steam.
+Para tornar as operações instantâneas (O(1)), o sistema utiliza uma Árvore B+ como índice primário (buscando direto pelo offset). Além disso, foram implementadas Listas Invertidas para permitir buscas combinadas rápidas baseadas no nome e no gênero do jogo. A base de dados utilizada contém informações sobre jogos da plataforma Steam.
 
 ## Novidades desta versão (TP2)
 * Árvore B+ As buscas, exclusões (lápide) e atualizações agora vão direto na posição exata do arquivo usando o offset salvo na árvore (`indiceArvore.db`), sem precisar ler o arquivo sequencialmente.
