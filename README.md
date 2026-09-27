@@ -13,3 +13,6 @@ Para rodar esse programa é necessário compilar os arquivos e executar o `Main.
 1. Execute o main e escolha a **opção 1** (Carregar banco de dados). Ele vai ler o `steam.csv` e criar automaticamente o `jogos.db` e os arquivos de índice.
 2. Com o banco carregado, você pode escolher a **opção 3** para buscar um jogo instantaneamente pelo ID.
 3. Para testar a funcionalidade nova de listas invertidas, escolha a **opção 7** (Busca Combinada) e digite um gênero (ex: *Action*) e uma palavra do título (ex: *War*).
+
+## Vídeo
+https://drive.google.com/drive/folders/1HTXGPkVSoFkCHQ8BAwTenz3ihdq67cHc?usp=sharing
