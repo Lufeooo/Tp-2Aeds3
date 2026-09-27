@@ -120,6 +120,10 @@ public class Main {
                     long offset = arquivo.create(novoJogo);
                     arvore.inserir(novoJogo.getId(), offset);
                     arvore.salvar();
+                    listaNomes.processarTexto(novoJogo.getNome(), novoJogo.getId(), " ");
+                    listaGeneros.processarTexto(novoJogo.getGenero(), novoJogo.getId(), ",");
+                    listaNomes.salvar();
+                    listaGeneros.salvar();
 
                     System.out.println("Jogo criado com sucesso");
                     System.out.println("ID gerado: " + novoJogo.getId());
@@ -270,7 +274,7 @@ public class Main {
                     scanf.nextLine(); 
                     String buscaGenero = scanf.nextLine();
                     
-                    System.out.print("Digite uma palavra do nome do jogo Ex: War, Simulator ");
+                    System.out.print("Digite uma palavra do nome do jogo Ex: War, Simulator: ");
                     String buscaNome = scanf.nextLine();
 
                     // Busca as listas de IDs nas duas estruturas

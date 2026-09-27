@@ -91,5 +91,20 @@ public class ListaInvertida {
                 System.out.println("erro na lista invertida" + e.getMessage());
             }
         }
+        public void processarTexto(String texto, int id, String separador) {
+        String[] partes = texto.split(separador);
+        for (String palavra : partes) {
+            String palavraLimpa = "";
+            for (int i = 0; i < palavra.length(); i++) {
+                char c = palavra.charAt(i);
+                if (Character.isLetterOrDigit(c)) {
+                    palavraLimpa += c;
+                }
+            }
+            if (palavraLimpa.length() > 0) {
+                this.inserir(palavraLimpa, id); 
+            }
+        }
+    }
 }
 
